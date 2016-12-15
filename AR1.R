@@ -38,5 +38,37 @@ plot(acf,type='h')+abline(h=2/sqrt(length(sim)-1),col='blue')+abline(h=-2/sqrt(l
 
 # Check for validity 
 
+check_valid <- function(n,acf){
+  criteria <- 2/sqrt(n)
+  j=1
+  while(abs(acf[j])>criteria){
+    j=j+1
+    if(j>=length(acf)){
+      return(j)
+    }
+  }
+  return(j)
+}
+
+
+v<-c()
+test_seq <- seq(-1,1,0.05)
+for (phi in test_seq){
+  valid <- c()
+  for (k in 1:10){
+    sim<- generate_ar(phi=phi)
+    acf <- get_acf(sim)
+    valid <- c(valid,check_valid(length(sim)-1,acf))
+  }
+  mean_valid <- mean(valid)
+  v <- c(v,mean_valid)
+}
+
+plot(x=test_seq,y=v,type='h')
+
+
+
+
+
 
 
